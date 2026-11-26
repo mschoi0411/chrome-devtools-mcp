@@ -1992,7 +1992,8 @@ Call ${handleDialog(this.#config.resolved).name} to handle it before continuing.
           hasPreviousPage: resolvedPageIndex > 0,
           startIndex: page.startPosition,
           endIndex: page.endPosition,
-          invalidPage: pagination?.pageIdx !== undefined &&
+          invalidPage:
+            pagination?.pageIdx !== undefined &&
             pagination.pageIdx >= pageCount,
         }
       : paginate<T>(data, pagination);

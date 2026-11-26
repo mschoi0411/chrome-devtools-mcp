@@ -2088,11 +2088,12 @@ describe('McpResponse heap snapshot formatting', () => {
       name: 'SecondNode',
       retainedSize: 100,
     });
-    const range =
-      new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(2, 4, 5, [
-        first,
-        second,
-      ]);
+    const range = new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(
+      2,
+      4,
+      5,
+      [first, second],
+    );
     response.setHeapSnapshotNodes(range, {
       pageIdx: 1,
       pageSize: 2,

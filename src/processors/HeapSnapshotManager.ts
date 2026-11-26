@@ -94,8 +94,7 @@ export class HeapSnapshot {
   worker: DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotWorkerProxy;
   queryPageCache?: {
     key: string;
-    provider:
-      DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotProviderProxy;
+    provider: DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotProviderProxy;
     totalLength: number;
   };
   // 1-indexed array where index is the class ID.

@@ -107,13 +107,21 @@ describe('HeapSnapshotManager', () => {
     const provider = sinon.createStubInstance(
       DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotProviderProxy,
     );
-    const count =
-      new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(0, 0, 5, []);
-    const page =
-      new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(2, 4, 5, [
+    const count = new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(
+      0,
+      0,
+      5,
+      [],
+    );
+    const page = new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(
+      2,
+      4,
+      5,
+      [
         createMockHeapSnapshotNode({id: 3}),
         createMockHeapSnapshotNode({id: 4}),
-      ]);
+      ],
+    );
     const firstPage =
       new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(0, 2, 5, [
         createMockHeapSnapshotNode({id: 1}),
@@ -170,8 +178,12 @@ describe('HeapSnapshotManager', () => {
     const provider = sinon.createStubInstance(
       DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotProviderProxy,
     );
-    const empty =
-      new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(0, 0, 0, []);
+    const empty = new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(
+      0,
+      0,
+      0,
+      [],
+    );
     snapshot.proxy = proxy;
     sinon.stub(manager, 'getSnapshot').resolves(snapshot);
     proxy.queryObjects.returns(provider);
