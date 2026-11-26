@@ -1,0 +1,64 @@
+name: Validate heap query #3605
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - ci/heap-query-3605
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          cache: npm
+          node-version: 22
+      - name: Install and sync
+        run: npm run sync
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
+      - name: Install Chrome
+        run: npx puppeteer browsers install chrome
+      - name: Build
+        run: npm run build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          cache: npm
+          node-version: ${{ matrix.node }}
+      - name: Allow Chrome sandbox
+        run: echo 0 | sudo tee /proc/sys/kernel/apparmor_restrict_unprivileged_userns
+      - name: Regression tests
+        run: npm run test:no-build -- tests/processors/HeapSnapshotManager.test.ts tests/McpResponse.test.ts tests/tools/memory.test.ts
+      - name: Full tests
+        run: npm run test:no-build
+
+  format-and-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          cache: npm
+          node-version-file: '.nvmrc'
+      - name: Install and sync
+        run: npm run sync
+      - name: Format check
+        run: npm run check-format
+      - name: Generate
+        run: npm run gen
+      - name: Generated diff
+        run: git diff --exit-code
