@@ -1,0 +1,26 @@
+name: Reproduce heap query #3605 on main
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - ci/heap-query-3605-baseline
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          cache: npm
+          node-version: 22
+      - run: npm run sync
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
+      - run: npm run build
+        env:
+          NODE_OPTIONS: '--max_old_space_size=4096'
+      - run: npm run test:no-build -- tests/processors/HeapSnapshotManager.test.ts

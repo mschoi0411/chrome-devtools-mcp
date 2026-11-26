@@ -17,6 +17,37 @@ import {TaskRunner} from '../../src/utils/TaskRunner.js';
 import {DevTools} from '../../src/third_party/browser.js';
 
 describe('HeapSnapshotManager', () => {
+  it('does not serialize every matching object for a requested page', async () => {
+    const manager = new HeapSnapshotManager(new TaskRunner());
+    const snapshot = sinon.createStubInstance(HeapSnapshot);
+    const proxy = sinon.createStubInstance(
+      DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotProxy,
+    );
+    const provider = sinon.createStubInstance(
+      DevTools.HeapSnapshotModel.HeapSnapshotProxy.HeapSnapshotProviderProxy,
+    );
+    snapshot.proxy = proxy;
+    sinon.stub(manager, 'getSnapshot').resolves(snapshot);
+    proxy.queryObjects.returns(provider);
+    provider.serializeItemsRange.resolves(
+      new DevTools.HeapSnapshotModel.HeapSnapshotModel.ItemsRange(0, 0, 5, []),
+    );
+    try {
+      await Reflect.apply(manager.queryObjects, manager, [
+        'tests/fixtures/example.heapsnapshot',
+        {},
+        {pageIdx: 0, pageSize: 2},
+      ]);
+      sinon.assert.calledWithExactly(
+        provider.serializeItemsRange.firstCall,
+        0,
+        0,
+      );
+    } finally {
+      manager.dispose();
+    }
+  });
+
   it('rejects when a file without .heapsnapshot or .heaptimeline extension is passed', async () => {
     const manager = new HeapSnapshotManager(new TaskRunner());
 
