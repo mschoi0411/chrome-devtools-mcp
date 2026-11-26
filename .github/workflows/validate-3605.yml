@@ -56,6 +56,10 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Install and sync
         run: npm run sync
+      - name: Format code
+        run: npm run format
+      - name: Show formatter patch
+        run: git diff -- src/McpResponse.ts src/processors/HeapSnapshotManager.ts tests/McpResponse.test.ts tests/processors/HeapSnapshotManager.test.ts
       - name: Format check
         run: npm run check-format
       - name: Generate

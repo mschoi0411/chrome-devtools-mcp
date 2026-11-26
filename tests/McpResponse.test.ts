@@ -2105,7 +2105,8 @@ describe('McpResponse heap snapshot formatting', () => {
     const text = getTextContent(content[0]);
     assert.match(text, /Showing 3-4 of 5 \(Page 2 of 3\)/);
     assert.ok(text.indexOf('FirstNode') < text.indexOf('SecondNode'));
-    assert.deepStrictEqual(structuredContent?.pagination, {
+    assert.ok(structuredContent);
+    assert.deepStrictEqual(Reflect.get(structuredContent, 'pagination'), {
       currentPage: 1,
       totalPages: 3,
       hasNextPage: true,
